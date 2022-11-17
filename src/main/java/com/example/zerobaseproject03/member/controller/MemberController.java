@@ -69,6 +69,8 @@ public class MemberController {
 
     }
 
+    // 사용자 정보 보여주기 요청을 처리하는 컨트롤러 실행
+
     @GetMapping("/info")
     public String memberInfo(){
 
@@ -78,10 +80,10 @@ public class MemberController {
 
 
     // 로그인
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String logIn() {
 
-        return "member/logIn";
+        return "member/login";
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.zerobaseproject03.controller;
+package com.example.zerobaseproject03.main_controller;
 
 
 // MainPage 클래스를 만든 목적

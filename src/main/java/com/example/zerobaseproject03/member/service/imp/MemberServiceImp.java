@@ -2,13 +2,22 @@ package com.example.zerobaseproject03.member.service.imp;
 
 import com.example.zerobaseproject03.components.MailComponents;
 import com.example.zerobaseproject03.member.entity.Member;
+import com.example.zerobaseproject03.member.exception.MemberNotEmailAuthException;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.repository.MemberRepository;
 import com.example.zerobaseproject03.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,17 +43,22 @@ public class MemberServiceImp implements MemberService {
             return false;
         }
 
+
+        // 입력하는 비밀번호의 암호화
+        String encPassword =
+                BCrypt.hashpw(input.getPassword(),BCrypt.gensalt());
+
         String uuid = UUID.randomUUID().toString(); // 이메일 인증 키
 
         Member member = Member.builder()
-                .userId(input.getUserId())
-                .userName(input.getUserName())
-                .phone(input.getPhone())
-                .password(input.getPassword())
-                .regDt(LocalDateTime.now())
-                .emailAuthYn(false)
-                .emailAuthKey(uuid)
-                .build();
+                              .userId(input.getUserId())
+                              .userName(input.getUserName())
+                              .phone(input.getPhone())
+                              .password(encPassword)
+                              .regDt(LocalDateTime.now())
+                              .emailAuthYn(false)
+                              .emailAuthKey(uuid)
+                              .build();
 
 
         memberRepository.save(member); // 해당 레코드(Data) 저장
@@ -78,4 +92,28 @@ public class MemberServiceImp implements MemberService {
         return true;
     }
 
+    // userName = 이메일
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Member> optionalMember = memberRepository.findById(username);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        // 이메일 인증이 안된 경우
+        if(!member.isEmailAuthYn()){
+            throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 시도해주세요.");
+        }
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        String userId = member.getUserId();
+        String password = member.getPassword();
+
+        return new User(userId,password,grantedAuthorities);
+    }
 }
