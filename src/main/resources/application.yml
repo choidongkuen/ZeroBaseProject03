@@ -1,1 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/assign02
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: choidongkuen
+    password: ehdrms6390
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: danaver13@gmail.com
+    password: beggscireuuqlaqy
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+
+
+
+
+
 

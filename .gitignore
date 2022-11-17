@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 커밋할 필요가 없는 파일
+/.idea/
+/.mvn/
+/mvnw
+/mvnw.cmd
+

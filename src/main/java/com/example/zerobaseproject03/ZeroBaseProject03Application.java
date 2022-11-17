@@ -8,6 +8,7 @@ public class ZeroBaseProject03Application {
 
     public static void main(String[] args) {
         SpringApplication.run(ZeroBaseProject03Application.class, args);
+
     }
 
 }
