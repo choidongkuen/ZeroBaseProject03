@@ -28,12 +28,6 @@ public class MainController {
     @RequestMapping("/")
     public String index(){
 
-        String mail = "danaver12@daum.net";
-        String subject = " 안녕하세요 오늘은 11/16 수능입니다. ";
-        String text = "<p>안녕하세요.</P><P>반갑습니다.</p> ";
-        mailComponents.sendMail(mail,subject,text);
-
-
         return "index";
     }
 

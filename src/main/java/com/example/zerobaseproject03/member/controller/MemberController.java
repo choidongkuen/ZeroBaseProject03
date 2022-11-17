@@ -16,7 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 
 // Member Controller
 // 회원가입/로그인/로그아웃 역할을 분담
-
+// 즉, 회원 정보에 관련된 서버로 들어오는 모든 처리에 대한 방향을 서버 앞단에서 제시
+// 컨트롤러를 구현한다는 것은 request의 처리를 담당하는 메소드를 구현하는 것이다.
 @Slf4j
 @Controller
 @Setter
@@ -31,10 +32,11 @@ public class MemberController {
     // 아이디/비밀번호는 민감한 데이터 -> post 방식
     // 회원가입(post)
     @PostMapping("/register")
-    public String register(HttpServletRequest request, HttpServletResponse response,
+    public String registerSubmit(HttpServletRequest request, HttpServletResponse response,
                            com.example.zerobaseproject03.member.model.MemberInput input,
                            Model model) {
 
+        // 회원 정보 실패 or 성공 ?
         boolean result = memberService.register(input);
         // 모델은 컨트롤러가 데이터 처리 후, 뷰에게 전달하는 데이터 객체이다.
         model.addAttribute("result", result);
@@ -45,11 +47,35 @@ public class MemberController {
 
     // 회원가입(get)
     @GetMapping("/register")
-    public String registerSubmit() {
+    public String register() {
 
         return "member/register";
 
     }
+
+
+    // 이메일 인증 부분(get)
+    // 사용자가 이메일 받고 링크 누르면 해당 컨트롤러 실행
+    @GetMapping("/email-auth")
+    public String emailAuth(HttpServletRequest request, Model model){
+
+        String uuid = request.getParameter("id");
+
+        boolean result = memberService.emailAuth(uuid);
+        model.addAttribute("result",result);
+
+
+        return "member/email_auth";
+
+    }
+
+    @GetMapping("/info")
+    public String memberInfo(){
+
+        return "member/info";
+    }
+
+
 
     // 로그인
     @GetMapping("/login")

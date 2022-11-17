@@ -7,10 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Entity // DB의 테이블
+@Entity
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 
 public class Member {
 
@@ -23,7 +25,9 @@ public class Member {
 
     // 회원 가입시, 이메일 인증이 필수
     // 이메일 인증시, 인증코드 생성 => 인증코드가 맞다면 true
+
     private boolean emailAuthYn; // 이메일 인증 여부
     private String emailAuthKey; // 이메일 인증 키
+    private LocalDateTime emailAuthDt; // 이메일 인증 날짜
 
 }
