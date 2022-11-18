@@ -1,11 +1,13 @@
 package com.example.zerobaseproject03.member.controller;
 
+import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import com.example.zerobaseproject03.member.service.MemberService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -13,11 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-
 // Member Controller
 // 회원가입/로그인/로그아웃 역할을 분담
 // 즉, 회원 정보에 관련된 서버로 들어오는 모든 처리에 대한 방향을 서버 앞단에서 제시
 // 컨트롤러를 구현한다는 것은 request의 처리를 담당하는 메소드를 구현하는 것이다.
+// 컨트롤러 :: 요청 처리 -> 뷰역할에서 필요한 데이터 모델객체에 담기 -> 뷰 이름 리턴
 @Slf4j
 @Controller
 @Setter
@@ -33,8 +35,8 @@ public class MemberController {
     // 회원가입(post)
     @PostMapping("/register")
     public String registerSubmit(HttpServletRequest request, HttpServletResponse response,
-                           com.example.zerobaseproject03.member.model.MemberInput input,
-                           Model model) {
+                                 com.example.zerobaseproject03.member.model.MemberInput input,
+                                 Model model) {
 
         // 회원 정보 실패 or 성공 ?
         boolean result = memberService.register(input);
@@ -57,12 +59,12 @@ public class MemberController {
     // 이메일 인증 부분(get)
     // 사용자가 이메일 받고 링크 누르면 해당 컨트롤러 실행
     @GetMapping("/email-auth")
-    public String emailAuth(HttpServletRequest request, Model model){
+    public String emailAuth(HttpServletRequest request, Model model) {
 
         String uuid = request.getParameter("id");
 
         boolean result = memberService.emailAuth(uuid);
-        model.addAttribute("result",result);
+        model.addAttribute("result", result);
 
 
         return "member/email_auth";
@@ -72,11 +74,10 @@ public class MemberController {
     // 사용자 정보 보여주기 요청을 처리하는 컨트롤러 실행
 
     @GetMapping("/info")
-    public String memberInfo(){
+    public String memberInfo() {
 
         return "member/info";
     }
-
 
 
     // 로그인
@@ -87,4 +88,60 @@ public class MemberController {
 
     }
 
+    // 비밀번호 찾기(시작)
+    @GetMapping("/find/password")
+    public String findPassword() {
+
+        return "member/find_password";
+    }
+
+
+    // 비밀번호 찾기(후) -> 초기화 메일을 보내기
+    // find_password.html에서 필요한 파라미터 객체 받기
+    @PostMapping("/find/password")
+    public String findPasswordSubmit(Model model,
+                                     ResetPasswordInput resetPasswordInput) {
+
+        boolean result = false;
+        try {
+            result =
+                    memberService.sendResetPassword(resetPasswordInput);
+        }catch (Exception e){
+
+        }
+        model.addAttribute("result",result);
+
+        return "member/find_password_result";
+
+    }
+
+    @GetMapping("/reset/password")
+    public String resetPassword(Model model, HttpServletRequest request){
+
+        String uuid = request.getParameter("id");
+        // 해당 uuid 값이 초기화하기에 적절한 데이터의 uuid값인지 체크
+        boolean result = memberService.checkResetPassword(uuid);
+
+        model.addAttribute("result",result);
+
+        return "member/reset_password";
+    }
+
+
+    @PostMapping("/reset/password")
+    public String resetPasswordSubmit(ResetPasswordInput input, Model model){
+
+        boolean result = false;
+        try {
+            result = memberService.resetPassword(input.getUserId(), input.getPassword());
+        }catch (Exception e){
+
+        }
+
+        // 실행 결과 리턴(boolean)
+        model.addAttribute("result", result);
+
+        return "member/reset_password_result";
+
+    }
 }

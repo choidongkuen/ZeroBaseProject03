@@ -40,11 +40,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable();
 
-        // 인증없이 접근 가능한 부분 설정(메인,회원가입,회원 정보)
+        // 로그인없이 접근 가능한 부분 설정(메인,회원가입,회원 정보)
         http.authorizeRequests()
             .antMatchers("/",
                     "/member/register",
-                    "/member/email-auth")
+                    "/member/email-auth",
+                    "/member/find/password",
+                    "/member/reset/password"
+            )
             .permitAll();
 
         // 로그인 실패시 처리하는 설정
@@ -53,13 +56,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .failureHandler(getFailureHandler())
             .permitAll();
 
-        super.configure(http);
 
         // 로그아웃 처리하는 설정
         http.logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
                 .logoutSuccessUrl("/") // 로그아웃시 이동할 페이지
                 .invalidateHttpSession(true); // 세션 초기화
+
+        super.configure(http);
     }
 
     @Override
