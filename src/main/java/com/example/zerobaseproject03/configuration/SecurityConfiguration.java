@@ -26,12 +26,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     // Password Encoder 가져오는 클래스
     @Bean
-    PasswordEncoder getPasswordEncoder(){
+    PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
 
     }
+
     @Bean
-    UserAuthenticationFailureHandler getFailureHandler(){
+    UserAuthenticationFailureHandler getFailureHandler() {
         return new UserAuthenticationFailureHandler();
     }
 
@@ -50,6 +51,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             )
             .permitAll();
 
+        // 관리자 관련 설정
+        http.authorizeRequests()
+            .antMatchers("/admin/**")
+            .hasAnyAuthority("ROLE_ADMIN");
+
         // 로그인 실패시 처리하는 설정
         http.formLogin()
             .loginPage("/member/login")
@@ -59,9 +65,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         // 로그아웃 처리하는 설정
         http.logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
-                .logoutSuccessUrl("/") // 로그아웃시 이동할 페이지
-                .invalidateHttpSession(true); // 세션 초기화
+            .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
+            .logoutSuccessUrl("/") // 로그아웃시 이동할 페이지
+            .invalidateHttpSession(true); // 세션 초기화
+
+
+        http.exceptionHandling()
+            .accessDeniedPage("/error/denied");
 
         super.configure(http);
     }

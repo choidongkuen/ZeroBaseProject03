@@ -86,6 +86,12 @@ public class MemberServiceImp implements MemberService {
         }
 
         Member member = optionalMember.get();
+
+        // 이미 활성화된 상태임으로 더 이상 활성화 x(활성화 실패 메시지)
+        if(member.isEmailAuthYn()){
+            return false;
+        }
+
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
@@ -94,6 +100,7 @@ public class MemberServiceImp implements MemberService {
     }
 
     // userName = 이메일
+    // 로그인
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -111,6 +118,11 @@ public class MemberServiceImp implements MemberService {
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        // 해당 회원이 관리자인 경우
+        if(member.isAdminYn()){
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
 
         String userId = member.getUserId();
         String password = member.getPassword();
