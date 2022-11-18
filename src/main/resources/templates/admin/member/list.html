@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>관리자 화면</title>
@@ -10,8 +10,11 @@
       border-collapse: collapse;
 
     }
-    .list table th, list table td{
+    .list table th, .list table td{
       border: solid 1px #000;
+    }
+    .list table th{
+      background-color: antiquewhite;
     }
   </style>
 
@@ -66,22 +69,30 @@
       </thead>
 
       <tbody>
+      <!--  thymeleaf 엔진을 사용해서 각 객체의 속성을 보여줌  -->
+        <tr th:each="member : ${members}">
+              <td>1</td>
+              <td th:text="${member.userId}"></td>
+              <td th:text="${member.userName}"></td>
+              <td th:text="${member.phone}"></td>
+              <td>
+                <p th:if="${member.emailAuthYn}">Y</p>
+                <p th:if="${member.emailAuthYn eq false}">N</p>
+              </td>
 
-        <tr>
-          <td>1</td>
-          <td></td>
+              <td>
+                <p th:text="${member.regDt}">2022.12.01</p>
+              </td>
+              <td>
+                <p th:if="${member.adminYn}">Y</p>
+                <p th:if="${member.adminYn eq false}">N</p>
+              </td>
         </tr>
 
       </tbody>
     </table>
 
-
-
   </div>
-
-
-
-
 
 </body>
 </html>

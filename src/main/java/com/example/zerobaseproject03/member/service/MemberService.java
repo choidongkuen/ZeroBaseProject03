@@ -1,8 +1,12 @@
 package com.example.zerobaseproject03.member.service;
 
+import com.example.zerobaseproject03.admin.dto.MemberDto;
+import com.example.zerobaseproject03.member.entity.Member;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import java.util.List;
 
 
 public interface MemberService extends UserDetailsService {
@@ -20,6 +24,10 @@ public interface MemberService extends UserDetailsService {
 
     // 입력받은 uuid 값이 유효한지 확인
     boolean checkResetPassword(String uuid);
+
+    // 관리자 페이지에서 회원 목록 리턴하는 메소드(only admin)
+    List<MemberDto> list();
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.zerobaseproject03.member.service.imp;
 
+import com.example.zerobaseproject03.admin.dto.MemberDto;
+import com.example.zerobaseproject03.admin.mapper.MemberMapper;
 import com.example.zerobaseproject03.components.MailComponents;
 import com.example.zerobaseproject03.member.entity.Member;
 import com.example.zerobaseproject03.member.exception.MemberNotEmailAuthException;
@@ -29,6 +31,8 @@ public class MemberServiceImp implements MemberService {
 
     private final MemberRepository memberRepository;
     private final MailComponents mailComponents;
+
+    private final MemberMapper memberMapper;
 
     // 회원가입 로직을 구현하는 메소드(register)
     @Override
@@ -225,5 +229,17 @@ public class MemberServiceImp implements MemberService {
         }
 
         return true;
+    }
+
+
+    // 관리자 페이지에서 회원 관리(회원 목록) 로직
+    @Override
+    public List<MemberDto> list() {
+
+        MemberDto memberDto = new MemberDto();
+        List<MemberDto> list = memberMapper.selectList(memberDto);
+        // 모든 회원 목록 리턴
+        return list;
+
     }
 }

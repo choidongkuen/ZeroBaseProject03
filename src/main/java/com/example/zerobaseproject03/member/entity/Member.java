@@ -28,9 +28,8 @@ public class Member {
     // 이메일 인증시, 인증코드 생성 => 인증코드가 맞다면 true
 
     private boolean emailAuthYn; // 이메일 인증 여부
-    private String emailAuthKey; // 이메일 인증 키
     private LocalDateTime emailAuthDt; // 이메일 인증 날짜
-
+    private String emailAuthKey; // 이메일 인증 키
 
     private String resetPasswordKey; // 비밀번호 초기화를 위해
     private LocalDateTime resetPasswordLimitDt; // 비밀번호 key 유효기간
