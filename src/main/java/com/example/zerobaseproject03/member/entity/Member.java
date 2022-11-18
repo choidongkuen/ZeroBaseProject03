@@ -35,6 +35,6 @@ public class Member {
     private String resetPasswordKey; // 비밀번호 초기화를 위해
     private LocalDateTime resetPasswordLimitDt; // 비밀번호 key 유효기간
 
-    private boolean adminYn; // 해당 회원(데이터)가 관리자인지 여
+    private boolean adminYn; // 해당 회원(데이터)가 관리자인지 여부
 
 }

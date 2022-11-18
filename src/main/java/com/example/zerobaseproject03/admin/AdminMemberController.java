@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 public class AdminMemberController {
 
-
     // 회원 정보 페이지
     @GetMapping("/member/list.do")
     public String list(){

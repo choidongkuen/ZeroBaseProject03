@@ -47,11 +47,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     "/member/register",
                     "/member/email-auth",
                     "/member/find/password",
+                    // ?
                     "/member/reset/password"
             )
             .permitAll();
 
         // 관리자 관련 설정
+        // 관리자 페이지 접근 위해서는 "ROLE_ADMIN" 필수
         http.authorizeRequests()
             .antMatchers("/admin/**")
             .hasAnyAuthority("ROLE_ADMIN");
@@ -70,6 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .invalidateHttpSession(true); // 세션 초기화
 
 
+        // 관리자가 아닌 경우 에러 페이지
         http.exceptionHandling()
             .accessDeniedPage("/error/denied");
 

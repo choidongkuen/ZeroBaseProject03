@@ -116,8 +116,10 @@ public class MemberServiceImp implements MemberService {
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 시도해주세요.");
         }
 
+        // 해당 회원이 일반 회원인 경우
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
 
         // 해당 회원이 관리자인 경우
         if(member.isAdminYn()){
@@ -142,7 +144,7 @@ public class MemberServiceImp implements MemberService {
 
         // 해당 정보가 없는 경우
         if(!optionalMember.isPresent()){
-            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+            throw new UsernameNotFoundException("회원 정보가 존재하지d 않습니다.");
         }
 
         Member member = optionalMember.get();
