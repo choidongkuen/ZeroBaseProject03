@@ -260,4 +260,21 @@ public class MemberServiceImp implements MemberService {
         return list;
 
     }
+    // 회원 목록에서 각 회원의 userId 링크를 타고 각 회원의 정보를 얻어오는 메소드
+    // JPA를 통해서 가져오자(쿼리문이 복잡한 것은 myBatis를 쓰자!)
+    @Override
+    public MemberDto detail(String userId) {
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        if(!optionalMember.isPresent()){
+            return null;
+        }
+
+        Member member = optionalMember.get();
+
+        return MemberDto.of(member);
+
+
+    }
 }

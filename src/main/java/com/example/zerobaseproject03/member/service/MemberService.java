@@ -28,4 +28,8 @@ public interface MemberService extends UserDetailsService {
     // 관리자 페이지에서 회원 목록 리턴하는 메소드(only admin)
     List<MemberDto> list(MemberParam parameter);
 
+
+    // 각 회원의 상세정보를 가져오는 메소드
+    MemberDto detail(String userId);
+
 }

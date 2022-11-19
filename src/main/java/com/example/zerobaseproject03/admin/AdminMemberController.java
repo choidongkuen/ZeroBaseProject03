@@ -22,7 +22,7 @@ import java.util.List;
 public class AdminMemberController {
     private final MemberService memberService;
 
-    // 회원 정보 페이지
+    // 회원 정보(목록) 페이지 컨트롤러
     // MemberParam => 회원 관리에서 검색한 SearchType,searchValue 속성을 가진다.
     @GetMapping("/member/list.do")
     public String list(Model model, MemberParam parameter) {
@@ -40,7 +40,6 @@ public class AdminMemberController {
         long pageSize = parameter.getPageSize();
         long pageIndex = parameter.getPageIndex();
         String queryString = parameter.getQueryString();
-
         PageUtil pageUtil = new PageUtil(totalCount, pageSize, pageIndex, queryString);
 
         model.addAttribute("members",members);
@@ -50,4 +49,22 @@ public class AdminMemberController {
 
         return "admin/member/list";
     }
+
+
+    // 각 회원의 상세페이지에 관한 컨트롤러
+    @GetMapping ("/member/detail.do")
+    public String detail(Model model, MemberParam parameter) {
+
+        parameter.init();
+
+
+        MemberDto member =
+            memberService.detail(parameter.getUserId());
+
+        model.addAttribute("member",member);
+
+        return "admin/member/detail";
+    }
+
+
 }
