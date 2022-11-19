@@ -1,4 +1,4 @@
-package com.example.zerobaseproject03.admin;
+package com.example.zerobaseproject03.admin.controller;
 
 
 import org.springframework.stereotype.Controller;

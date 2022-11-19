@@ -1,15 +1,15 @@
-package com.example.zerobaseproject03.admin;
+package com.example.zerobaseproject03.admin.controller;
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
 import com.example.zerobaseproject03.admin.model.MemberParam;
-import com.example.zerobaseproject03.member.entity.Member;
+import com.example.zerobaseproject03.admin.model.MemberInput;
 import com.example.zerobaseproject03.member.service.MemberService;
 import com.example.zerobaseproject03.util.PageUtil;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class AdminMemberController {
 
         // 페이지 구현 관련 부분
         long totalCount = 0;
-        if(members != null && members.size() > 0){
+        if (members != null && members.size() > 0) {
             totalCount = members.get(0).getTotalCount();
         }
 
@@ -42,9 +42,9 @@ public class AdminMemberController {
         String queryString = parameter.getQueryString();
         PageUtil pageUtil = new PageUtil(totalCount, pageSize, pageIndex, queryString);
 
-        model.addAttribute("members",members);
-        model.addAttribute("pager",pageUtil.pager());
-        model.addAttribute("totalCount",totalCount);
+        model.addAttribute("members", members);
+        model.addAttribute("pager", pageUtil.pager());
+        model.addAttribute("totalCount", totalCount);
 
 
         return "admin/member/list";
@@ -52,18 +52,46 @@ public class AdminMemberController {
 
 
     // 각 회원의 상세페이지에 관한 컨트롤러
-    @GetMapping ("/member/detail.do")
+    @GetMapping("/member/detail.do")
     public String detail(Model model, MemberParam parameter) {
 
         parameter.init();
 
 
         MemberDto member =
-            memberService.detail(parameter.getUserId());
+                memberService.detail(parameter.getUserId());
 
-        model.addAttribute("member",member);
+        model.addAttribute("member", member);
 
         return "admin/member/detail";
+    }
+
+
+    @PostMapping("/member/status.do")
+    public String status(Model model, MemberInput parameter) {
+
+        String userId = parameter.getUserId();
+        String userStatus = parameter.getUserStatus();
+
+
+        boolean result = memberService.updateStatus(userId, userStatus);
+
+        return "redirect:/admin/member/detail.do?userId=" + userId;
+
+    }
+
+
+    @PostMapping("/member/password.do")
+    public String updatePassword(Model model, MemberInput parameter) {
+
+        String userId = parameter.getUserId();
+        String password = parameter.getPassword();
+
+        boolean result = memberService.updatePassword(userId, password);
+
+        return "redirect:/admin/member/detail.do?userId=" + userId;
+
+
     }
 
 

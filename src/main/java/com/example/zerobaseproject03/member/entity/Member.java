@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member implements MemberCode {
 
     @Id
     private String userId; // 사용자 이메일(ID)
@@ -35,5 +35,7 @@ public class Member {
     private LocalDateTime resetPasswordLimitDt; // 비밀번호 key 유효기간
 
     private boolean adminYn; // 해당 회원(데이터)가 관리자인지 여부
+
+    private String userStatus; // 사용자의 상태(이용 가능 or 정지)
 
 }

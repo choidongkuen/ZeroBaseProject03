@@ -32,4 +32,11 @@ public interface MemberService extends UserDetailsService {
     // 각 회원의 상세정보를 가져오는 메소드
     MemberDto detail(String userId);
 
+    // 회원 상태 변경하는 메소드
+    boolean updateStatus(String userId, String userStatus);
+
+    // 회원 비밀번호 초기화 하는 메소드
+    boolean updatePassword(String userId, String password);
+
+
 }
