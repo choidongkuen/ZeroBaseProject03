@@ -28,6 +28,15 @@
       height: 20px;
       float: left;
     }
+    .pager {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .pager a.on{
+      font-weight: bold;
+      color: red;
+    }
   </style>
 
 </head>
@@ -111,7 +120,7 @@
         <br>
         <!--  thymeleaf 엔진을 사용해서 각 객체의 속성을 보여줌  -->
           <tr th:each="member : ${members}">
-                <td>1</td>
+                <td th:text="${member.seq}">1</td>
                 <td th:text="${member.userId}"></td>
                 <td th:text="${member.userName}"></td>
                 <td th:text="${member.phone}"></td>

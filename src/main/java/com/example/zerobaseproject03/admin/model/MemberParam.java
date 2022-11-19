@@ -53,4 +53,27 @@ public class MemberParam {
         }
 
     }
+
+    // 쿼리 문자열 생성하는 메소드(페이지 마다 해당 요청 쿼리 문자열을 가지고 있어야 함)
+    public String getQueryString(){
+
+        init();
+
+        StringBuilder sb = new StringBuilder();
+
+        if(searchType != null && searchType.length() > 0){
+            sb.append(String.format("searchType=%s",searchType));
+        }
+
+
+        if(searchValue != null && searchValue.length() > 0){
+
+            if(sb.length() > 0){
+                sb.append("&");
+            }
+            sb.append(String.format("searchValue=%s",searchValue));
+        }
+
+        return sb.toString();
+    }
 }

@@ -27,7 +27,7 @@ public class MemberDto {
 
 
     // 추가 칼럼
-
     long totalCount;
+    long seq;
 
 }

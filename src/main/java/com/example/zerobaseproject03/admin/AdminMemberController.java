@@ -37,10 +37,11 @@ public class AdminMemberController {
             totalCount = members.get(0).getTotalCount();
         }
 
+        long pageSize = parameter.getPageSize();
         long pageIndex = parameter.getPageIndex();
-        String queryString = "";
+        String queryString = parameter.getQueryString();
 
-        PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize(), pageIndex, queryString);
+        PageUtil pageUtil = new PageUtil(totalCount, pageSize, pageIndex, queryString);
 
         model.addAttribute("members",members);
         model.addAttribute("pager",pageUtil.pager());

@@ -247,8 +247,12 @@ public class MemberServiceImp implements MemberService {
         // 구성하는 dto의 totalCount 값 추가
         if(!CollectionUtils.isEmpty(list)){
 
+            int i = 0;
             for(MemberDto dto : list){
                 dto.setTotalCount(totalCount);
+                dto.setSeq(totalCount - parameter.getPageStart() - i);
+                i ++;
+
             }
         }
 
