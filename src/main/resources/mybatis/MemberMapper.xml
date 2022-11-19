@@ -5,10 +5,80 @@
 
 <mapper namespace="com.example.zerobaseproject03.admin.mapper.MemberMapper">
 
-    <select id="selectList" resultType="com.example.zerobaseproject03.admin.dto.MemberDto">
+    <!-- 모든 Member 데이터 개수 -->
+    <select id="selectListCount"
+
+            parameterType="com.example.zerobaseproject03.admin.model.MemberParam"
+            resultType="long">
+
+        select count(*)
+        from member
+        where 1=1
+
+        <if test="searchType != null and searchValue != null">
+            <choose>
+                <when test="searchType == 'userId'">
+                    and user_id like concat('%', #{searchValue}, '%')
+                </when>
+                <when test="searchType == 'userName'">
+                    and user_name like concat('%', #{searchValue}, '%')
+                </when>
+                <when test="searchType == 'phone'">
+                    and phone like concat('%', #{searchValue}, '%')
+                </when>
+                <otherwise>
+                    and
+                    (
+                    user_id like concat('%', #{searchValue}, '%')
+                    or
+                    user_name like concat('%', #{searchValue}, '%')
+                    or
+                    phone like concat('%', #{searchValue}, '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+
+
+    </select>
+
+    <select id="selectList"
+            parameterType="com.example.zerobaseproject03.admin.model.MemberParam"
+            resultType="com.example.zerobaseproject03.admin.dto.MemberDto">
 
         select *
-        from Member;
+        from member
+        where 1=1
+
+            <if test="searchType != null and searchValue != null">
+                <choose>
+                    <when test="searchType == 'userId'">
+                        and user_id like concat('%', #{searchValue}, '%')
+                    </when>
+                    <when test="searchType == 'userName'">
+                        and user_name like concat('%', #{searchValue}, '%')
+                    </when>
+                    <when test="searchType == 'phone'">
+                        and phone like concat('%', #{searchValue}, '%')
+                    </when>
+                    <otherwise>
+                        and
+                        (
+                        user_id like concat('%', #{searchValue}, '%')
+                        or
+                        user_name like concat('%', #{searchValue}, '%')
+                        or
+                        phone like concat('%', #{searchValue}, '%')
+                        )
+                    </otherwise>
+                </choose>
+            </if>
+
+        limit #{pageStart}, #{pageEnd}
 
     </select>
 </mapper>
+
+
+
+

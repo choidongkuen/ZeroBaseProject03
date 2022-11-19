@@ -2,6 +2,8 @@ package com.example.zerobaseproject03.admin.mapper;
 
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
+
+import com.example.zerobaseproject03.admin.model.MemberParam;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -10,7 +12,11 @@ import java.util.List;
 @Mapper
 public interface MemberMapper {
 
-    List<MemberDto> selectList(MemberDto memberDto);
 
+    // MemberMapper.xml에서 각 select 태그안에 id는
+    // 메소드 이름이다.(쿼리를 실행하는 메소드)
+
+    long selectListCount(MemberParam paramter);
+    List<MemberDto> selectList(MemberParam parameter);
 
 }

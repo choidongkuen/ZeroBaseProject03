@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 public class MemberDto {
 
-
     String userId;
     String userName;
     String phone;
@@ -26,5 +25,9 @@ public class MemberDto {
     LocalDateTime resetPasswordLimitDt;
     boolean adminYn;
 
+
+    // 추가 칼럼
+
+    long totalCount;
 
 }

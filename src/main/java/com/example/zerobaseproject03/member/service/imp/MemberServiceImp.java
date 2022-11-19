@@ -2,6 +2,7 @@ package com.example.zerobaseproject03.member.service.imp;
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
 import com.example.zerobaseproject03.admin.mapper.MemberMapper;
+import com.example.zerobaseproject03.admin.model.MemberParam;
 import com.example.zerobaseproject03.components.MailComponents;
 import com.example.zerobaseproject03.member.entity.Member;
 import com.example.zerobaseproject03.member.exception.MemberNotEmailAuthException;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -233,11 +235,23 @@ public class MemberServiceImp implements MemberService {
 
 
     // 관리자 페이지에서 회원 관리(회원 목록) 로직
+    // MemeberParam parameter =>  입력창에서 받아온 검색 타입과 검색 값
     @Override
-    public List<MemberDto> list() {
+    public List<MemberDto> list(MemberParam parameter) {
 
-        MemberDto memberDto = new MemberDto();
-        List<MemberDto> list = memberMapper.selectList(memberDto);
+        long totalCount = memberMapper.selectListCount(parameter);
+        List<MemberDto>list = memberMapper.selectList(parameter);
+
+
+        // Member 테이블이 비어있지 않다면
+        // 구성하는 dto의 totalCount 값 추가
+        if(!CollectionUtils.isEmpty(list)){
+
+            for(MemberDto dto : list){
+                dto.setTotalCount(totalCount);
+            }
+        }
+
         // 모든 회원 목록 리턴
         return list;
 
