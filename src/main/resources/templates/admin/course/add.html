@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+
+    <style>
+        .detail table{
+
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .detail table th, .detail table td{
+            border:solid 1px #000;
+        }
+
+        .buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .buttons a, .buttons button {
+
+            border-width: 0;
+            background-color: transparent;
+            text-decoration: underline;
+            font-size: 12px;
+            line-height: 20px;
+            height: 20px;
+            cursor: pointer;
+
+        }
+
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+
+        <!-- 삭제 버튼시 동작하는 함수 -->
+        // confirm (예 or 아니오)
+        $(document).ready(function() {
+
+        });
+
+    </script>
+</head>
+
+<body>
+
+    <h1>강좌 관리 - 강좌 등록</h1>
+
+
+
+    <form method="post">
+
+        <div class="detail">
+            <table>
+
+                <tbody>
+                    <tr>
+
+                        <th>
+                            강좌명 :
+                        </th>
+
+                        <td>
+
+                            <input type="text" name="subject" required placeholder="강좌명 입력"/>
+
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+            <div class="buttons">
+                <button type="submit">강좌 등록 하기</button>
+                <a href="/admin/course/list.do"> 목록 이동 </a>
+            </div>
+        </div>
+
+    </form>
+
+
+</body>
+</html>

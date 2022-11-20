@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+
+        .list table th {
+            background-color: antiquewhite;
+        }
+
+        .pager {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+
+        <!-- 삭제 버튼시 동작하는 함수 -->
+        // confirm (예 or 아니오)
+        $(document).ready(function() {
+
+        });
+
+    </script>
+</head>
+<body>
+
+    <h1>강좌 관리</h1>
+
+    <div>
+        <a href="/admin/course/add.do">강좌 등록</a>
+    </div>
+
+    <div class="list">
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>
+                    강좌명
+                </th>
+
+                <th>
+                    등록일
+                </th>
+
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="member : ${members}">
+                <td th:text="${member.seq}">1</td>
+                <td>
+                    <a th:href="'/edit.do?id=' + ${member.id}" th:text="${member.subject}">강좌명</a>
+                </td>
+                <td>
+                    <p th:text="${member.regDt}"></p>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <div class="pager" th:utext="${pager}">
+        </div>
+
+    </div>
+
+</body>
+</html>

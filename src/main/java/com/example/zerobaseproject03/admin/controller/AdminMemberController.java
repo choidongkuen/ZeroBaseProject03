@@ -1,13 +1,14 @@
 package com.example.zerobaseproject03.admin.controller;
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
-import com.example.zerobaseproject03.admin.model.MemberParam;
 import com.example.zerobaseproject03.admin.model.MemberInput;
+import com.example.zerobaseproject03.admin.model.MemberParam;
+import com.example.zerobaseproject03.course.controller.BaseController;
 import com.example.zerobaseproject03.member.service.MemberService;
-import com.example.zerobaseproject03.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/admin")
-public class AdminMemberController {
+public class AdminMemberController extends BaseController {
     private final MemberService memberService;
 
     // 회원 정보(목록) 페이지 컨트롤러
@@ -33,19 +34,20 @@ public class AdminMemberController {
 
         // 페이지 구현 관련 부분
         long totalCount = 0;
-        if (members != null && members.size() > 0) {
+        if(!CollectionUtils.isEmpty(members)){
             totalCount = members.get(0).getTotalCount();
+
         }
 
         long pageSize = parameter.getPageSize();
         long pageIndex = parameter.getPageIndex();
         String queryString = parameter.getQueryString();
-        PageUtil pageUtil = new PageUtil(totalCount, pageSize, pageIndex, queryString);
+
+        String pageHtml = getPagerHtml(totalCount, pageSize, pageIndex, queryString);
 
         model.addAttribute("members", members);
-        model.addAttribute("pager", pageUtil.pager());
         model.addAttribute("totalCount", totalCount);
-
+        model.addAttribute("pager", pageHtml);
 
         return "admin/member/list";
     }

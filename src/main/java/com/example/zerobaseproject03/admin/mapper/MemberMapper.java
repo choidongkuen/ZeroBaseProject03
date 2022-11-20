@@ -16,7 +16,7 @@ public interface MemberMapper {
     // MemberMapper.xml에서 각 select 태그안에 id는
     // 메소드 이름이다.(쿼리를 실행하는 메소드)
 
-    long selectListCount(MemberParam paramter);
+    long selectListCount(MemberParam parameter);
     List<MemberDto> selectList(MemberParam parameter);
 
 }
