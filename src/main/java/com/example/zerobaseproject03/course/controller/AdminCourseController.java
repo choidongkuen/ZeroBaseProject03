@@ -1,12 +1,9 @@
 package com.example.zerobaseproject03.course.controller;
 
-import com.example.zerobaseproject03.admin.dto.MemberDto;
-import com.example.zerobaseproject03.admin.model.MemberParam;
 import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
 import com.example.zerobaseproject03.course.service.CourseService;
-import com.example.zerobaseproject03.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -64,39 +60,70 @@ public class AdminCourseController extends BaseController {
     // 신규 추가 => 그냥 추가
     // 수정 => 기존 데이터에 덧붙이기
 
+
+    // 강좌 등록, 수정하는 메소드(로직 처리 전)
     @GetMapping(value = {"/course/add.do", "/course/edit.do"})
     public String add(Model model, HttpServletRequest request
             , CourseInput parameter) {
 
         // client 부터 요청한 주소를 이용해 [추가 모드] or [수정 모드] 판단
         boolean editMode = request.getRequestURI().contains("/edit.do");
+        CourseDto detail = new CourseDto();
 
+        // 해당 요청 == [수정 모드]
         if (editMode) {
 
             long id = parameter.getId();
             CourseDto existCourse = courseService.getById(id);
 
-            if(existCourse == null){
+            // 수정 하려고 하는 강좌(id) 가 존재하지 않는 경우
+            if (existCourse == null) {
                 // error 처리
-
-                model.addAttribute("message","강좌 정보가 존재하지 않습니다.");
+                // template/common/error.html
+                model.addAttribute("message", "강좌 정보가 존재하지 않습니다.");
                 return "common/error";
             }
 
-            model.addAttribute("detail",existCourse);
-
+            // 수정 하려고 하는 강좌(id) 가 존재 하는 경우 => 정상적인 수정
+            detail = existCourse;
         }
+
+        model.addAttribute("editMode", editMode);
+        model.addAttribute("detail", detail);
 
         return "admin/course/add";
 
     }
 
-    // 강좌 등록하는 메소드
-    @PostMapping("/course/add.do")
-    public String addSubmit(Model model, CourseInput parameter) {
+    // 강좌 등록, 수정하는 메소드(로직 처리 후)
+    @PostMapping(value = {"/course/add.do", "/course/edit.do"})
+    public String addSubmit(Model model, HttpServletRequest request,
+                            CourseInput parameter) {
 
-        boolean result = courseService.add(parameter);
 
+        // client 부터 요청한 주소를 이용해 [추가 모드] or [수정 모드] 판단
+        boolean editMode = request.getRequestURI().contains("/edit.do");
+        CourseDto detail = new CourseDto();
+
+        // 해당 요청 == [수정 모드]
+        if (editMode) {
+
+            long id = parameter.getId();
+            CourseDto existCourse = courseService.getById(id);
+
+            // 수정 하려고 하는 강좌(id) 가 존재하지 않는 경우
+            if (existCourse == null) {
+                // error 처리
+                // template/common/error.html
+                model.addAttribute("message", "강좌 정보가 존재하지 않습니다.");
+                return "common/error";
+            }
+            boolean result = courseService.set(parameter);
+
+        // 해당 요청 == [삽입 모드]
+        } else{
+            boolean result = courseService.add(parameter);
+        }
 
         return "redirect:/admin/course/list.do";
 

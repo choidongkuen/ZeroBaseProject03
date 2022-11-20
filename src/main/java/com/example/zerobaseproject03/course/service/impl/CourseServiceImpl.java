@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -22,21 +23,7 @@ public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
 
-    // 입력된 강좌 CourseRepository 저장하는 메소드
-    @Override
-    public boolean add(CourseInput parameter) {
-
-
-        Course course = Course.builder()
-                              .subject(parameter.getSubject())
-                              .regDt(LocalDateTime.now())
-                              .build();
-
-        courseRepository.save(course);
-
-        return true;
-    }
-
+    // 저장된 강좌 리스트 리턴하는 메소드
     @Override
     public List<CourseDto> list(CourseParam parameter) {
 
@@ -59,11 +46,52 @@ public class CourseServiceImpl implements CourseService {
         return list;
     }
 
+
+    // id를 이용해 해당 강좌 찾는 메소드
     @Override
     public CourseDto getById(long id) {
 
         return courseRepository.findById(id).
                                map(CourseDto::of).orElse(null);
 
+    }
+
+
+    // 입력된 강좌 추가하는 메소드
+    @Override
+    public boolean add(CourseInput parameter) {
+
+
+        Course course = Course.builder()
+                              .subject(parameter.getSubject())
+                              .regDt(LocalDateTime.now())
+                              .build();
+
+        courseRepository.save(course);
+
+        return true;
+    }
+
+
+    // 강좌 정보 수정 하는 메소드(edit)
+    @Override
+    public boolean set(CourseInput parameter) {
+
+        Optional<Course> optionalCourse =
+                courseRepository.findById(parameter.getId());
+
+        if(!optionalCourse.isPresent()){
+            // 수정할 데이터가 존재하지 않음
+            return false;
+        }
+
+        // 수정할 강좌 엔티티
+        Course course = optionalCourse.get();
+
+        course.setSubject(parameter.getSubject());
+        course.setUdtDt(LocalDateTime.now());
+        courseRepository.save(course);
+
+        return true;
     }
 }

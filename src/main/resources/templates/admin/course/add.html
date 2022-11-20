@@ -66,9 +66,7 @@
                         </th>
 
                         <td>
-
-                            <input type="text" name="subject" required placeholder="강좌명 입력"/>
-
+                            <input th:value="${detail.subject}" type="text" name="subject" required placeholder="강좌명 입력"/>
                         </td>
                     </tr>
                 </tbody>
@@ -76,7 +74,9 @@
             </table>
 
             <div class="buttons">
-                <button type="submit">강좌 등록 하기</button>
+            <!--  AdminCourseController 에서 부터 오는 editMode는 [수정 모드] => true, [등록 모드] => false              -->
+                <button th:if="${editMode}" type="submit">강좌 수정 하기</button>
+                <button th:if="${!editMode}" type="submit">강좌 등록 하기</button>
                 <a href="/admin/course/list.do"> 목록 이동 </a>
             </div>
         </div>
