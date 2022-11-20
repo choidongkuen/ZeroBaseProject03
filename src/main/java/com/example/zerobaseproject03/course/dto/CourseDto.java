@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class CourseDto {
 
     Long id;
+    long categoryId;
 
     String imagePath;
     String keyword;
@@ -29,7 +31,7 @@ public class CourseDto {
     String contents;
     long price;
     long salePrice;
-    LocalDateTime saleEndDt;
+    LocalDate saleEndDt;
 
     LocalDateTime regDt; // 등록일
     LocalDateTime udtDt; // 수정일
@@ -41,6 +43,7 @@ public class CourseDto {
 
         return CourseDto.builder()
                 .id(course.getId())
+                .categoryId(course.getCategoryId())
                 .imagePath(course.getImagePath())
                 .keyword(course.getKeyword())
                 .subject(course.getSubject())

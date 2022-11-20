@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,16 +58,43 @@ public class CourseServiceImpl implements CourseService {
 
     }
 
+    // 입력된 할인 종료일을 알맞은 LocalDate 형식으로 바꿔주는 메소드
+    private LocalDate getLocalDate(String value) {
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        try {
+           return LocalDate.parse(value, formatter);
+
+        } catch (Exception e) {
+
+        }
+
+        return null;
+
+    }
+
 
     // 입력된 강좌 추가하는 메소드
     @Override
     public boolean add(CourseInput parameter) {
+        // 2022-11-20
+
+        LocalDate saleEndDt = getLocalDate(parameter.getSaleEndDtText());
 
 
         Course course = Course.builder()
-                              .subject(parameter.getSubject())
-                              .regDt(LocalDateTime.now())
-                              .build();
+                  .categoryId(parameter.getCategoryId())
+                  .subject(parameter.getSubject())
+                  .keyword(parameter.getKeyword())
+                  .summary(parameter.getSummary())
+                  .contents(parameter.getContents())
+                  .price(parameter.getPrice())
+                  .salePrice(parameter.getSalePrice())
+                  .saleEndDt(saleEndDt)
+                  .regDt(LocalDateTime.now())
+                  .build();
 
         courseRepository.save(course);
 
@@ -77,10 +106,13 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public boolean set(CourseInput parameter) {
 
+        LocalDate saleEndDt = getLocalDate(parameter.getSaleEndDtText());
+
+
         Optional<Course> optionalCourse =
                 courseRepository.findById(parameter.getId());
 
-        if(!optionalCourse.isPresent()){
+        if (!optionalCourse.isPresent()) {
             // 수정할 데이터가 존재하지 않음
             return false;
         }
@@ -88,7 +120,14 @@ public class CourseServiceImpl implements CourseService {
         // 수정할 강좌 엔티티
         Course course = optionalCourse.get();
 
+        course.setCategoryId(parameter.getCategoryId());
         course.setSubject(parameter.getSubject());
+        course.setKeyword(parameter.getKeyword());
+        course.setSummary(parameter.getSummary());
+        course.setContents(parameter.getContents());
+        course.setPrice(parameter.getPrice());
+        course.setSalePrice(parameter.getSalePrice());
+        course.setSaleEndDt(saleEndDt);
         course.setUdtDt(LocalDateTime.now());
         courseRepository.save(course);
 

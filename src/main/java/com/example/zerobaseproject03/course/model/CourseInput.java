@@ -13,8 +13,17 @@ import lombok.Setter;
 public class CourseInput {
 
 
+    long id;
+    long categoryId;
 
     String subject;
-    long id;
+    String keyword;
+    String summary;
+    String contents;
+
+    long price;
+    long salePrice;
+    String saleEndDtText;
+
 
 }

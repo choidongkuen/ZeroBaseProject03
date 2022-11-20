@@ -1,5 +1,6 @@
 package com.example.zerobaseproject03.course.controller;
 
+import com.example.zerobaseproject03.admin.service.CategoryService;
 import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
@@ -24,7 +25,8 @@ import java.util.List;
 public class AdminCourseController extends BaseController {
 
 
-    private final CourseService courseService;
+    private final CourseService courseService; // 강좌 서비스
+    private final CategoryService categoryService; // 카테고리 서비스
 
     // 등록한 강좌 목록 가져오는 메소드
     @GetMapping("/course/list.do")
@@ -65,6 +67,9 @@ public class AdminCourseController extends BaseController {
     @GetMapping(value = {"/course/add.do", "/course/edit.do"})
     public String add(Model model, HttpServletRequest request
             , CourseInput parameter) {
+
+        // 로직 처리 전에 해당 강좌에 카테고리 정보를 전달받아야 한다.
+        model.addAttribute("category",categoryService.list());
 
         // client 부터 요청한 주소를 이용해 [추가 모드] or [수정 모드] 판단
         boolean editMode = request.getRequestURI().contains("/edit.do");

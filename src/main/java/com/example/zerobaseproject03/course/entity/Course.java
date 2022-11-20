@@ -4,6 +4,7 @@ package com.example.zerobaseproject03.course.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,7 +19,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-
+    long categoryId;
     String imagePath;
     String keyword;
     String subject;
@@ -32,7 +33,7 @@ public class Course {
     long price;
     long salePrice;
 
-    LocalDateTime saleEndDt;
+    LocalDate saleEndDt;
 
     LocalDateTime regDt; // 강좌 추가일
     LocalDateTime udtDt; // 강좌 수정일
