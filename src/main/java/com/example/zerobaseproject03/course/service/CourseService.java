@@ -22,5 +22,7 @@ public interface CourseService {
     // 아이디를 통해서 강좌 상세 정보를 가져옴
     CourseDto getById(long id);
 
+    // 선책한 강좌를 삭제
+    boolean del(String idList);
 
 }

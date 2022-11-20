@@ -134,4 +134,17 @@ public class AdminCourseController extends BaseController {
 
     }
 
+
+
+    // 전달받은 값을 가지고 강좌 삭제하는 메소드
+    @PostMapping("/course/delete.do")
+    public String del(Model model, HttpServletRequest request,
+                            CourseInput parameter) {
+
+        boolean result = courseService.del(parameter.getIdList());
+
+        return "redirect:/admin/course/list.do";
+
+    }
+
 }

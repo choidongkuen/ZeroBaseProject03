@@ -133,4 +133,32 @@ public class CourseServiceImpl implements CourseService {
 
         return true;
     }
+
+    // 선택한 강좌 삭제하는 메소드
+    @Override
+    public boolean del(String idList) {
+
+        // idList => 콤마 단위로 분리된 문자열
+        if(idList != null && idList.length() > 0){
+
+            String[] ids = idList.split(",");
+            for(String x : ids){
+                long id = 0L;
+                try {
+                    id = Long.parseLong(x);
+                }catch (Exception e){
+
+                }
+
+                if(id > 0){
+
+                    courseRepository.deleteById(id);
+
+
+                }
+            }
+        }
+
+        return true;
+    }
 }

@@ -40,6 +40,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.csrf().disable();
+        // smartEditor
+        http.headers().frameOptions().sameOrigin();
 
         // 로그인없이 접근 가능한 부분 설정(메인,회원가입,회원 정보)
         http.authorizeRequests()

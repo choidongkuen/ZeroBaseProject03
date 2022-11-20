@@ -27,6 +27,32 @@
             font-weight: bold;
             color: red;
         }
+
+        .list .buttons{
+            position: relative;
+            padding: 10px 0;
+
+
+        }
+
+        .list .buttons a,.list .buttons button{
+            border-width: 0;
+            background-color: transparent;
+            text-decoration: underline;
+            font-size: 14px;
+            line-height: 15px;
+            height: 15px;
+            color: #000;
+
+            cursor :pointer;
+
+        }
+
+        .list .buttons .total-count{
+            position: absolute;
+            top:0;
+            right:0;
+        }
     </style>
 
 
@@ -37,6 +63,46 @@
         // confirm (예 or 아니오)
         $(document).ready(function() {
 
+
+            $('#selectAll').on('click', function() {
+
+                var checked = $(this).is(':checked');
+
+
+                $('#dataList input[type=checkbox]').each(function(k, v) {
+                    $(this).prop('checked', checked);
+                });
+
+
+            });
+
+            $('#deleteButton').on('click',function (){
+
+                var $checked = $('#dataList input[type=checkbox]:checked');
+
+                if($checked.length < 1){
+                    alert('삭제할 데이터를 선택해 주세요!');
+                    return false;
+                }
+
+                if(!confirm('선택한 데이터를 삭제하시겠습니까? ')){
+                    return false;
+                }
+
+                var idList =[];
+
+                $.each($checked, function(k,v){
+                    idList.push($(this).val());
+                });
+
+
+
+                var $deleteForm = $('form[name=deleteForm]');
+                $deleteForm.find('input[name=idList]').val(idList.join(','));
+                $deleteForm.submit();
+
+            });
+
         });
 
     </script>
@@ -45,16 +111,29 @@
 
     <h1>강좌 관리</h1>
 
-    <div>
-        <a href="/admin/course/add.do">강좌 등록</a>
+    <div th:replace="/fragment/layout.html :: fragment-admin-body-menu">
     </div>
 
     <div class="list">
 
+        <div class="buttons">
+            <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
+
+            <a href="/admin/course/add.do">강좌 등록</a>
+            <button id="deleteButton" type="button">선택 삭제</button>
+        </div>
+
+
         <table>
             <thead>
             <tr>
-                <th>ID</th>
+
+               <!-- 강좌 선택 관련 체크 박스   -->
+
+                <th>
+                    <input id="selectAll" type="checkbox"/>
+                </th>
+                <th>No</th>
                 <th>
                     강좌명
                 </th>
@@ -66,9 +145,13 @@
             </tr>
             </thead>
 
-            <tbody>
+            <tbody id="dataList">
 
             <tr th:each="member : ${members}">
+
+                <td>
+                    <input type="checkbox" th:value="${member.id}"/>
+                </td>
                 <td th:text="${member.seq}">1</td>
                 <td>
                     <a th:href="'/admin/course/edit.do?id=' + ${member.id}" th:text="${member.subject}">강좌명</a>
@@ -85,6 +168,10 @@
         </div>
 
     </div>
+
+    <form name="deleteForm" method="post" action="/admin/course/delete.do">
+        <input type="hidden" name="idList"/>
+    </form>
 
 </body>
 </html>
