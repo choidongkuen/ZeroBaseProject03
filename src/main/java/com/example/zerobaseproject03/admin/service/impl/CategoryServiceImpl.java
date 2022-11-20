@@ -2,6 +2,7 @@ package com.example.zerobaseproject03.admin.service.impl;
 
 import com.example.zerobaseproject03.admin.dto.CategoryDto;
 import com.example.zerobaseproject03.admin.entity.Category;
+import com.example.zerobaseproject03.admin.mapper.CategoryMapper;
 import com.example.zerobaseproject03.admin.model.CategoryInput;
 import com.example.zerobaseproject03.admin.repository.CategoryRepository;
 import com.example.zerobaseproject03.admin.service.CategoryService;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
     private Sort getSortBySortValue() {
 
@@ -88,5 +90,9 @@ public class CategoryServiceImpl implements CategoryService {
         return true;
 
     }
+    @Override
+    public List<CategoryDto> frontList(CategoryDto parameter) {
 
+        return categoryMapper.select(parameter);
+    }
 }

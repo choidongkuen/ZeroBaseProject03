@@ -19,4 +19,8 @@ public interface CategoryService {
 
     // 카테고리 삭제
     boolean del(Long id);
+
+
+    // 프론트 카테고리 정보
+    List<CategoryDto> frontList(CategoryDto parameter);
 }

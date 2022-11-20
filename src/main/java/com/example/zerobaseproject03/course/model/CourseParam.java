@@ -16,4 +16,5 @@ import lombok.Setter;
 public class CourseParam extends CommonParam {
 
 
+    long categoryId;
 }
