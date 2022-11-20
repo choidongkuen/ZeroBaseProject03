@@ -30,7 +30,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 
-public class MemberServiceImp implements MemberService {
+public class MemberServiceImpl implements MemberService {
 
 
     private final MemberRepository memberRepository;
@@ -288,6 +288,7 @@ public class MemberServiceImp implements MemberService {
 
     }
 
+    // 회원관리 페이지에서 해당 회원 상태 수정하는 메소드
     @Override
     public boolean updateStatus(String userId, String userStatus) {
 
@@ -306,6 +307,7 @@ public class MemberServiceImp implements MemberService {
         return true;
     }
 
+    // 회원의 요청으로 비밀번호를 수정하는 메소드
     @Override
     public boolean updatePassword(String userId, String password) {
 
