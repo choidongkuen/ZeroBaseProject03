@@ -15,7 +15,7 @@ public interface CourseService {
     // 강좌 정보를 수정하는 메소드
     boolean set(CourseInput parameter);
 
-    // CourseRepository에서 저장된 Course 정보들을 가져옴
+    // CourseRepository에서 저장된 Course 정보들을 가져옴(관리자용)
     List<CourseDto> list(CourseParam parameter);
 
 
@@ -24,5 +24,9 @@ public interface CourseService {
 
     // 선책한 강좌를 삭제
     boolean del(String idList);
+
+
+    // 회원의 강좌 리스트를 반환하는 메소드(일반 회원용)
+    List<CourseDto> frontList(CourseParam parameter);
 
 }

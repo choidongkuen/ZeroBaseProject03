@@ -55,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .permitAll();
 
         // 관리자 관련 설정
-        // 관리자 페이지 접근 위해서는 "ROLE_ADMIN" 필수
+        // 관리자 페이지 접근 위해서는 "ROLE_ADMIN" 필수!!!
         http.authorizeRequests()
             .antMatchers("/admin/**")
             .hasAnyAuthority("ROLE_ADMIN");

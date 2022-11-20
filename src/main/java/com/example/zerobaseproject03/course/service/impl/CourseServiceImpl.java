@@ -65,7 +65,7 @@ public class CourseServiceImpl implements CourseService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         try {
-           return LocalDate.parse(value, formatter);
+            return LocalDate.parse(value, formatter);
 
         } catch (Exception e) {
 
@@ -85,16 +85,16 @@ public class CourseServiceImpl implements CourseService {
 
 
         Course course = Course.builder()
-                  .categoryId(parameter.getCategoryId())
-                  .subject(parameter.getSubject())
-                  .keyword(parameter.getKeyword())
-                  .summary(parameter.getSummary())
-                  .contents(parameter.getContents())
-                  .price(parameter.getPrice())
-                  .salePrice(parameter.getSalePrice())
-                  .saleEndDt(saleEndDt)
-                  .regDt(LocalDateTime.now())
-                  .build();
+                              .categoryId(parameter.getCategoryId())
+                              .subject(parameter.getSubject())
+                              .keyword(parameter.getKeyword())
+                              .summary(parameter.getSummary())
+                              .contents(parameter.getContents())
+                              .price(parameter.getPrice())
+                              .salePrice(parameter.getSalePrice())
+                              .saleEndDt(saleEndDt)
+                              .regDt(LocalDateTime.now())
+                              .build();
 
         courseRepository.save(course);
 
@@ -139,18 +139,18 @@ public class CourseServiceImpl implements CourseService {
     public boolean del(String idList) {
 
         // idList => 콤마 단위로 분리된 문자열
-        if(idList != null && idList.length() > 0){
+        if (idList != null && idList.length() > 0) {
 
             String[] ids = idList.split(",");
-            for(String x : ids){
+            for (String x : ids) {
                 long id = 0L;
                 try {
                     id = Long.parseLong(x);
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
 
-                if(id > 0){
+                if (id > 0) {
 
                     courseRepository.deleteById(id);
 
@@ -158,7 +158,16 @@ public class CourseServiceImpl implements CourseService {
                 }
             }
         }
-
         return true;
+    }
+
+    // 회원의 강좌 목록을 반환하는 메소드
+    // List<Course> -> List<CourseDto>
+    @Override
+    public List<CourseDto> frontList(CourseParam parameter) {
+
+        List<Course> courseList = courseRepository.findAll();
+
+        return CourseDto.of(courseList);
     }
 }
