@@ -33,6 +33,7 @@ public class TakeCourseServiceImpl implements TakeCourseService {
     private final TakeCourseRepository takeCourseRepository;
 
 
+    // 회원들이 수강하는 수강 리스트 반환하는 메소드
     @Override
     public List<TakeCourseDto> list(TakeCourseParam parameter) {
 
@@ -53,5 +54,26 @@ public class TakeCourseServiceImpl implements TakeCourseService {
         }
 
         return list;
+    }
+
+
+    // 특정 회원의 수강 상태를 변경하는 메소드
+    @Override
+    public ServiceResult updateStatus(long id, String status) {
+
+        Optional<TakeCourse> optionalTakeCourse
+                = takeCourseRepository.findById(id);
+
+        if(optionalTakeCourse.isEmpty()){
+            return new ServiceResult(false, "수강 정보가 존재하지 않습니다.");
+        }
+
+        TakeCourse takeCourse = optionalTakeCourse.get();
+        takeCourse.setStatus(status);
+        takeCourseRepository.save(takeCourse);
+
+
+        return new ServiceResult(true);
+
     }
 }

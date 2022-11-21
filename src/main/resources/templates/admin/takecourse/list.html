@@ -47,6 +47,9 @@
             cursor :pointer;
 
         }
+        .list .row-buttons {
+            text-align: center;
+        }
 
         .list .buttons .total-count{
            text-align: right;
@@ -62,42 +65,29 @@
         $(document).ready(function() {
 
 
-            $('#selectAll').on('click', function() {
-
-                var checked = $(this).is(':checked');
-
-
-                $('#dataList input[type=checkbox]').each(function(k, v) {
-                    $(this).prop('checked', checked);
-                });
-
-
+            $('#searchCourseId').on('change', function() {
+                var id = $(this).val();
+                location.href = '?searchCourseId=' + id;
             });
 
-            $('#deleteButton').on('click',function (){
 
-                var $checked = $('#dataList input[type=checkbox]:checked');
+            $('.row-buttons button').on('click', function() {
 
-                if($checked.length < 1){
-                    alert('삭제할 데이터를 선택해 주세요!');
+
+                var status = $(this).val();
+                var id = $(this).closest('div').find('input[name=id]').val();
+
+
+                var msg = status == 'COMPLETE' ? '결제완료 처리 하시겠습니까?' : '수강취소 처리 하시겠습니까?';
+                if (!confirm(msg)) {
                     return false;
                 }
 
-                if(!confirm('선택한 데이터를 삭제하시겠습니까? ')){
-                    return false;
-                }
 
-                var idList =[];
-
-                $.each($checked, function(k,v){
-                    idList.push($(this).val());
-                });
-
-
-
-                var $deleteForm = $('form[name=deleteForm]');
-                $deleteForm.find('input[name=idList]').val(idList.join(','));
-                $deleteForm.submit();
+                var $procForm = $('#procForm');
+                $procForm.find('input[name=id]').val(id);
+                $procForm.find('input[name=status]').val(status);
+                $procForm.submit(); // admin/takecourse/status.do 서버로 날라감
 
             });
 
@@ -140,6 +130,8 @@
                     상태
                 </th>
 
+                <th>비고</th>
+
             </tr>
             </thead>
 
@@ -151,10 +143,10 @@
                 <td th:text="${member.seq}">1</td>
 
                 <td>
-                    <p th:text="${member.regDt}"></p>
+                    <p th:text="${member.regDtText}"></p>
                 </td>
                 <td>
-                    <a th:href="'/admin/course/edit.do?id=' + ${member.id}" th:text="${member.subject}">강좌명</a>
+                    <p th:text="${member.subject}">강좌명</p>
                 </td>
 
                 <td>
@@ -175,6 +167,15 @@
 
                 </td>
 
+                <td>
+                    <!--  결제 전인 경우만  해당 로직 실행  -->
+                    <div class ="row-buttons" th:if="${member.status eq 'REQ'}">
+                        <input type="hidden" name="id" th:value="${member.id}"/>
+                        <button value="COMPLETE" type="button">결제완료 처리</button>
+                        <button value="CANCEL" type="button">수강취소 처리</button>
+                    </div>
+                </td>
+
             </tr>
 
             </tbody>
@@ -185,8 +186,10 @@
 
     </div>
 
-    <form name="deleteForm" method="post" action="/admin/course/delete.do">
-        <input type="hidden" name="idList"/>
+    <!-- 회원의 수강 관리 상태(status) 변경 -->
+    <form id="procForm" method="post" action="/admin/takecourse/status.do">
+        <input type="hidden" name="id"/>
+        <input type="hidden" name="status"/>
     </form>
 
 </body>

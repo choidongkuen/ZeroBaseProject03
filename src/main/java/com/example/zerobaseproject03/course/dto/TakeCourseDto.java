@@ -2,11 +2,13 @@ package com.example.zerobaseproject03.course.dto;
 
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Builder
@@ -37,5 +39,13 @@ public class TakeCourseDto {
 
     long totalCount;
     long seq;
+
+
+    public String getRegDtText(){
+
+        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd / HH:mm");
+        return this.regDt != null ? regDt.format(formatter) : "";
+
+    }
 
 }
