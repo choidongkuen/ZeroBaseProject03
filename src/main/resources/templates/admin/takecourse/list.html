@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+
+        }
+
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+
+        .list table th {
+            background-color: antiquewhite;
+        }
+
+        .pager {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pager a.on {
+            font-weight: bold;
+            color: red;
+        }
+
+        .list .buttons{
+            position: relative;
+            padding: 10px 0;
+
+
+        }
+
+        .list .buttons a,.list .buttons button{
+            border-width: 0;
+            background-color: transparent;
+            text-decoration: underline;
+            font-size: 14px;
+            line-height: 15px;
+            height: 15px;
+            color: #000;
+
+            cursor :pointer;
+
+        }
+
+        .list .buttons .total-count{
+           text-align: right;
+        }
+    </style>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>
+
+        <!-- 삭제 버튼시 동작하는 함수 -->
+        // confirm (예 or 아니오)
+        $(document).ready(function() {
+
+
+            $('#selectAll').on('click', function() {
+
+                var checked = $(this).is(':checked');
+
+
+                $('#dataList input[type=checkbox]').each(function(k, v) {
+                    $(this).prop('checked', checked);
+                });
+
+
+            });
+
+            $('#deleteButton').on('click',function (){
+
+                var $checked = $('#dataList input[type=checkbox]:checked');
+
+                if($checked.length < 1){
+                    alert('삭제할 데이터를 선택해 주세요!');
+                    return false;
+                }
+
+                if(!confirm('선택한 데이터를 삭제하시겠습니까? ')){
+                    return false;
+                }
+
+                var idList =[];
+
+                $.each($checked, function(k,v){
+                    idList.push($(this).val());
+                });
+
+
+
+                var $deleteForm = $('form[name=deleteForm]');
+                $deleteForm.find('input[name=idList]').val(idList.join(','));
+                $deleteForm.submit();
+
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+
+    <h1>수강 관리</h1>
+
+    <div th:replace="/fragment/layout.html :: fragment-admin-body-menu">
+    </div>
+
+    <div class="list">
+
+        <div class="buttons">
+            <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
+        </div>
+
+
+
+        <table>
+            <thead>
+            <tr>
+                <th>No</th>
+
+                <th>
+                    등록일
+                </th>
+                <th>
+                    강좌명
+                </th>
+
+                <th colspan="3">
+                    신청인 정보
+                </th>
+
+                <th>
+                    상태
+                </th>
+
+            </tr>
+            </thead>
+
+
+            <tbody id="dataList">
+
+            <tr th:each="member : ${members}">
+
+                <td th:text="${member.seq}">1</td>
+
+                <td>
+                    <p th:text="${member.regDt}"></p>
+                </td>
+                <td>
+                    <a th:href="'/admin/course/edit.do?id=' + ${member.id}" th:text="${member.subject}">강좌명</a>
+                </td>
+
+                <td>
+                    <p th:text="${member.userName}"></p>
+                </td>
+                <td>
+                    <p th:text="${member.userId}"></p>
+                </td>
+                <td>
+                    <p th:text="${member.phone}"></p>
+                </td>
+
+
+                <td>
+                    <p th:if="${member.status eq 'REQ'}"> 수강 신청(결제 전)</p>
+                    <p th:if="${member.status eq 'COMPLETE'}"> 결제 완료</p>
+                    <p th:if="${member.status eq 'CANCEL'}"> 수강 취소</p>
+
+                </td>
+
+            </tr>
+
+            </tbody>
+        </table>
+
+        <div class="pager" th:utext="${pager}">
+        </div>
+
+    </div>
+
+    <form name="deleteForm" method="post" action="/admin/course/delete.do">
+        <input type="hidden" name="idList"/>
+    </form>
+
+</body>
+</html>
