@@ -1,6 +1,7 @@
 package com.example.zerobaseproject03.course.controller;
 
 import com.example.zerobaseproject03.admin.service.CategoryService;
+import com.example.zerobaseproject03.common.model.ResponseResult;
 import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.course.model.TakeCourseInput;
 import com.example.zerobaseproject03.course.service.CourseService;
@@ -36,10 +37,14 @@ public class ApiCourseController extends BaseController {
         ServiceResult serviceResult = courseService.req(parameter);
 
         if(!serviceResult.isResult()){
-            return ResponseEntity.ok().body(serviceResult.getMessage());
+            ResponseResult responseResult =
+                    new ResponseResult(false, serviceResult.getMessage());
+
+            return ResponseEntity.ok().body(responseResult);
         }
 
-        return ResponseEntity.ok().body(parameter);
+        ResponseResult responseResult = new ResponseResult(true);
+        return ResponseEntity.ok().body(responseResult);
 
     }
 }
