@@ -1,7 +1,10 @@
 package com.example.zerobaseproject03.member.controller;
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
+import com.example.zerobaseproject03.course.dto.TakeCourseDto;
 import com.example.zerobaseproject03.course.model.ServiceResult;
+import com.example.zerobaseproject03.course.model.TakeCourseParam;
+import com.example.zerobaseproject03.course.service.TakeCourseService;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import com.example.zerobaseproject03.member.service.MemberService;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.List;
 
 
 // Member Controller
@@ -36,6 +40,7 @@ import java.security.Principal;
 public class MemberController {
 
     private final MemberService memberService;
+    private final TakeCourseService takeCourseService;
 
     // 아이디/비밀번호는 민감한 데이터 -> post 방식
     // 회원가입(post)
@@ -149,9 +154,11 @@ public class MemberController {
     public String memberTakecourse(Model model, Principal principal) {
 
         String userId = principal.getName();
-        MemberDto detail = memberService.detail(userId);
 
-        model.addAttribute("detail", detail);
+        List<TakeCourseDto> list =
+                takeCourseService.myCourse(userId);
+
+        model.addAttribute("list", list);
 
         return "member/takecourse";
     }

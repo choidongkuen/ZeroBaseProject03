@@ -19,12 +19,17 @@
         });
     </script>
 
+    <style>
+        .toHome{
+            text-align: right;
+        }
+    </style>
 </head>
 <body>
     <h1>회원 정보 페이지</h1>
 
-<!--    <div th:replace="/fragment/layout.html :: fragment-body-menu">-->
-<!--    </div>-->
+    <div th:replace="/fragment/layout.html :: fragment-body-menu">
+    </div>
 
     <div>
         <hr/>
@@ -91,7 +96,8 @@
 
             <div>
                 <button type="submit">수정</button>
-                <a href="/member/withdraw"> 회원 탈퇴 </a>
+                <a href="/member/withdraw"> 회원 탈퇴 </a> |
+                <a class="toHome" href="/">홈으로 이동</a>
             </div>
         </form>
     </div>

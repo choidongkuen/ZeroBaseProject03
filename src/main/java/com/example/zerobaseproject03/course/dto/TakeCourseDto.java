@@ -1,6 +1,7 @@
 package com.example.zerobaseproject03.course.dto;
 
 
+import com.example.zerobaseproject03.course.entity.TakeCourse;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -46,6 +47,18 @@ public class TakeCourseDto {
         DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd - HH:mm");
         return this.regDt != null ? regDt.format(formatter) : "";
 
+    }
+
+    public static TakeCourseDto of(TakeCourse x){
+
+        return TakeCourseDto.builder()
+                    .id(x.getId())
+                    .courseId(x.getCourseId())
+                    .userId(x.getUserId())
+                    .payPrice(x.getPayPrice())
+                    .status(x.getStatus())
+                    .regDt(x.getRegDt())
+                    .build();
     }
 
 }
