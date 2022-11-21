@@ -43,4 +43,8 @@ public interface MemberService extends UserDetailsService {
     // 회원 비밀번호 초기화 하는 메소드( 회원 정보 페이지 )
     ServiceResult updateMemberPassword(MemberInput parameter);
 
+
+    // 회원 정보 수정 관련 메소드
+    ServiceResult updateMember(MemberInput parameter);
+
 }

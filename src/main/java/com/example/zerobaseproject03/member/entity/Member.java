@@ -23,6 +23,7 @@ public class Member implements MemberCode {
     private String phone; // 사용자 전화번호
     private String password; // 비밀번호
     private LocalDateTime regDt; // 가입일
+    private LocalDateTime udtDt; // 회원 정보 수정일
 
     // 회원 가입시, 이메일 인증이 필수
     // 이메일 인증시, 인증코드 생성 => 인증코드가 맞다면 true

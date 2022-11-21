@@ -6,6 +6,7 @@ import com.sun.istack.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Getter
@@ -20,6 +21,7 @@ public class MemberDto {
     String phone;
     String password;
     LocalDateTime regDt;
+    LocalDateTime udtDt;
 
     boolean emailAuthYn;
     LocalDateTime emailAuthDt;
@@ -44,6 +46,7 @@ public class MemberDto {
                 .userName(member.getUserName())
                 .phone(member.getPhone())
                 .regDt(member.getRegDt())
+                .udtDt(member.getUdtDt())
                 .emailAuthYn(member.isEmailAuthYn())
                 .emailAuthDt(member.getEmailAuthDt())
                 .emailAuthKey(member.getEmailAuthKey())
@@ -53,6 +56,24 @@ public class MemberDto {
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
                 .build();
+
+    }
+
+
+    // 등록일 formatter
+    public String getRegDtText(){
+
+        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd - HH:mm:ss");
+        return this.regDt != null ? regDt.format(formatter) : "";
+
+    }
+
+    // 수정일 formatter
+
+    public String getUdtDtText(){
+
+        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd - HH:mm:ss");
+        return this.udtDt != null ? udtDt.format(formatter) : "";
 
     }
 

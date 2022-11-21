@@ -359,4 +359,26 @@ public class MemberServiceImpl implements MemberService {
 
         return new ServiceResult(true);
     }
+
+    // 회원 정보 수정하는 메소드(회원 정보 페이지)
+    @Override
+    public ServiceResult updateMember(MemberInput parameter) {
+
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        // 해당 회원 정보 존재 x
+        if(optionalMember.isEmpty()){
+            return new ServiceResult(false,"회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+        member.setPhone(parameter.getPhone());
+        member.setUdtDt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+
+    }
 }

@@ -43,7 +43,7 @@ public class TakeCourseDto {
 
     public String getRegDtText(){
 
-        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd / HH:mm");
+        DateTimeFormatter formatter  = DateTimeFormatter.ofPattern("yyyy.MM.dd - HH:mm");
         return this.regDt != null ? regDt.format(formatter) : "";
 
     }

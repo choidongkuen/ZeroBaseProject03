@@ -88,6 +88,28 @@ public class MemberController {
 
         return "member/info";
     }
+
+
+    // 회원 정보 수정 보내는 컨트롤러
+    @PostMapping("/info")
+    public String memberInfoSubmit(Model model
+            , Principal principal
+            , MemberInput parameter) {
+
+        String userId = principal.getName();
+        parameter.setUserId(userId);
+
+        ServiceResult serviceResult = memberService.updateMember(parameter);
+
+        if(!serviceResult.isResult()){
+            model.addAttribute("message",serviceResult.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/info";
+    }
+
+
     ///////////////////////
     // 사용자 비밀번호 정보 컨트롤러
     @GetMapping("/password")
@@ -113,7 +135,7 @@ public class MemberController {
         ServiceResult serviceResult =
                 memberService.updateMemberPassword(parameter);
 
-        if(!serviceResult.isResult()){
+        if (!serviceResult.isResult()) {
             model.addAttribute("message", serviceResult.getMessage());
             return "common/error";
         }
@@ -161,35 +183,35 @@ public class MemberController {
         try {
             result =
                     memberService.sendResetPassword(resetPasswordInput);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
-        model.addAttribute("result",result);
+        model.addAttribute("result", result);
 
         return "member/find_password_result";
 
     }
 
     @GetMapping("/reset/password")
-    public String resetPassword(Model model, HttpServletRequest request){
+    public String resetPassword(Model model, HttpServletRequest request) {
 
         String uuid = request.getParameter("id");
         // 해당 uuid 값이 초기화하기에 적절한 데이터의 uuid값인지 체크
         boolean result = memberService.checkResetPassword(uuid);
 
-        model.addAttribute("result",result);
+        model.addAttribute("result", result);
 
         return "member/reset_password";
     }
 
 
     @PostMapping("/reset/password")
-    public String resetPasswordSubmit(ResetPasswordInput input, Model model){
+    public String resetPasswordSubmit(ResetPasswordInput input, Model model) {
 
         boolean result = false;
         try {
             result = memberService.resetPassword(input.getUserId(), input.getPassword());
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
