@@ -8,10 +8,12 @@ import com.example.zerobaseproject03.course.service.TakeCourseService;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import com.example.zerobaseproject03.member.service.MemberService;
+import com.example.zerobaseproject03.util.PasswordUtils;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -226,6 +228,41 @@ public class MemberController {
         model.addAttribute("result", result);
 
         return "member/reset_password_result";
+
+    }
+
+    @GetMapping("/withdraw")
+    public String memberWithdraw(Model model) {
+
+        return "member/withdraw";
+    }
+
+    @PostMapping("/withdraw")
+    public String memberWithdraw(Model model,
+                         Principal principal,
+                                 MemberInput parameter) {
+
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        if(!PasswordUtils.equals(parameter.getPassword(), detail.getPassword())){
+
+            model.addAttribute("message",
+                    "비밀번호가 일치하지 않습니다.");
+            return "common/error";
+
+        }
+
+
+//        ServiceResult serviceResult = memberService.withdraw(userId);
+//
+//        if(!serviceResult.isResult()){
+//            model.addAttribute("message",serviceResult.getMessage());
+//            return "common/error";
+//
+//        }
+//
+        return "redirect:/member/logout";
 
     }
 }

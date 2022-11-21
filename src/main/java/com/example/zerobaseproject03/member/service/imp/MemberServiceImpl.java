@@ -6,12 +6,14 @@ import com.example.zerobaseproject03.admin.model.MemberParam;
 import com.example.zerobaseproject03.components.MailComponents;
 import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.member.entity.Member;
+import com.example.zerobaseproject03.member.entity.MemberCode;
 import com.example.zerobaseproject03.member.exception.MemberNotEmailAuthException;
 import com.example.zerobaseproject03.member.exception.MemberStopUserException;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import com.example.zerobaseproject03.member.repository.MemberRepository;
 import com.example.zerobaseproject03.member.service.MemberService;
+import com.example.zerobaseproject03.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -123,6 +125,11 @@ public class MemberServiceImpl implements MemberService {
 
         if(Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())){
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인을 시도해주세요.");
+
+        }
+
+        if(Member.MEMBER_STATUS_WITHDRAW.equals(member.getUserStatus())){
+            throw new MemberStopUserException("탈퇴된 회원입니다.");
 
         }
 
@@ -345,15 +352,12 @@ public class MemberServiceImpl implements MemberService {
         Member member = optionalMember.get();
 
         // 전달된 비밀번호가 일치 x
-        if(!BCrypt.checkpw(parameter.getPassword(), member.getPassword())){
-
-            return new ServiceResult(false, "비밀번호가 잁치하지 않습니다.");
+        if(PasswordUtils.equals(parameter.getPassword(), member.getPassword())){
+            return new ServiceResult(false,"비밀번호가 일치하지 않습니다.");
         }
 
 
-        String encPassword = BCrypt.hashpw(parameter.getNewPassword(),
-                BCrypt.gensalt());
-
+        String encPassword = PasswordUtils.encPassword(parameter.getNewPassword());
         member.setPassword(encPassword);
         memberRepository.save(member);
 
@@ -383,5 +387,40 @@ public class MemberServiceImpl implements MemberService {
 
         return new ServiceResult(true);
 
+    }
+
+    // 회원 탈퇴 로직을 구현한 탈퇴 메소드
+    @Override
+    public ServiceResult withdraw(String userId, String password) {
+
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if (optionalMember.isEmpty()) {
+            return new ServiceResult(false, "회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        if (!PasswordUtils.equals(password, member.getPassword())) {
+            return new ServiceResult(false, "비밀번호가 일치하지 않습니다.");
+        }
+
+        member.setUserName("삭제회원");
+        member.setPhone("");
+        member.setPassword("");
+        member.setRegDt(null);
+        member.setUdtDt(null);
+        member.setEmailAuthYn(false);
+        member.setEmailAuthDt(null);
+        member.setEmailAuthKey("");
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        member.setUserStatus(MemberCode.MEMBER_STATUS_WITHDRAW);
+        member.setZipCode("");
+        member.setAddr("");
+        member.setAddrDetail("");
+        memberRepository.save(member);
+
+        return new ServiceResult();
     }
 }
