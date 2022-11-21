@@ -19,4 +19,5 @@ public class TakeCourseParam extends CommonParam {
     long categoryId;
     String status;
     String userId;
+    long searchCourseId;
 }

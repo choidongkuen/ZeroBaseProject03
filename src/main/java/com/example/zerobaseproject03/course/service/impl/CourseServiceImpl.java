@@ -28,6 +28,15 @@ import java.util.Optional;
 @Service
 public class CourseServiceImpl implements CourseService {
 
+    // 전체 강좌를 반환하는 메소드
+
+    @Override
+    public List<CourseDto> listAll() {
+
+        List<Course> courseList = courseRepository.findAll();
+        return CourseDto.of(courseList);
+    }
+
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
     private final TakeCourseRepository takeCourseRepository;

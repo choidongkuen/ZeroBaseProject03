@@ -1,15 +1,18 @@
 package com.example.zerobaseproject03.course.controller;
 
 import com.example.zerobaseproject03.admin.service.CategoryService;
+import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.dto.TakeCourseDto;
 import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.course.model.TakeCourseParam;
+import com.example.zerobaseproject03.course.service.CourseService;
 import com.example.zerobaseproject03.course.service.TakeCourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,18 +29,23 @@ public class AdminTakeCourseController extends BaseController {
 
     private final TakeCourseService takeCourseService; // 수강 강좌 서비스
     private final CategoryService categoryService; // 카테고리 서비스
+    private final CourseService courseService;
 
     // 회원이 신청한 수강 항목 관리하는 메소드(관리자용)
     @GetMapping("/takecourse/list.do")
-    public String list(Model model, TakeCourseParam parameter) {
+    public String list(Model model,
+                       TakeCourseParam parameter,
+                       BindingResult bindingResult) {
+
+
 
         parameter.init();
-        List<TakeCourseDto> courseList = takeCourseService.list(parameter);
+        List<TakeCourseDto> takeCourseList = takeCourseService.list(parameter);
 
         long totalCount = 0;
 
-        if (!CollectionUtils.isEmpty(courseList)) {
-            totalCount = courseList.get(0).getTotalCount();
+        if (!CollectionUtils.isEmpty(takeCourseList)) {
+            totalCount = takeCourseList.get(0).getTotalCount();
         }
 
         long pageSize = parameter.getPageSize();
@@ -46,9 +54,12 @@ public class AdminTakeCourseController extends BaseController {
 
         String pageHtml = getPagerHtml(totalCount, pageSize, pageIndex, queryString);
 
-        model.addAttribute("members", courseList);
+        model.addAttribute("members", takeCourseList);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("pager", pageHtml);
+
+        List<CourseDto> courseList = courseService.listAll();
+        model.addAttribute("courseList",courseList);
 
         return "admin/takecourse/list";
 

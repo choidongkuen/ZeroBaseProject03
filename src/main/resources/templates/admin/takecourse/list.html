@@ -86,7 +86,7 @@
 
                 var $procForm = $('#procForm');
                 $procForm.find('input[name=id]').val(id);
-                $procForm.find('input[name=status]').val(status);
+                $procForm.find('input[na me=status]').val(status);
                 $procForm.submit(); // admin/takecourse/status.do 서버로 날라감
 
             });
@@ -105,6 +105,12 @@
     <div class="list">
 
         <div class="buttons">
+            <select id="searchCourseId">
+                <option value="">전체 강좌</option>
+                <option th:each="x : ${courseList}"
+                        th:selected="${#strings.equals(param.courseId, 'userId')}"
+                        th:value="${x.id}" th:text="${x.subject}">자바 프로그래밍</option>
+            </select>
             <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>
         </div>
 
