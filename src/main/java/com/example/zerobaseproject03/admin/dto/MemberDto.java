@@ -32,6 +32,13 @@ public class MemberDto {
     boolean adminYn;
     String userStatus;
 
+    String zipCode;
+    String addr;
+    String addrDetail;
+
+
+
+
 
     // 추가 칼럼
     long totalCount;
@@ -55,6 +62,9 @@ public class MemberDto {
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
+                .zipCode(member.getZipCode())
+                .addr(member.getAddr())
+                .addrDetail(member.getAddrDetail())
                 .build();
 
     }
