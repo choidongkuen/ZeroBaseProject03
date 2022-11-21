@@ -7,6 +7,7 @@ import com.example.zerobaseproject03.course.entity.TakeCourseCode;
 import com.example.zerobaseproject03.course.mapper.CourseMapper;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
+import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.course.model.TakeCourseInput;
 import com.example.zerobaseproject03.course.repository.CourseRepository;
 import com.example.zerobaseproject03.course.repository.TakeCourseRepository;
@@ -204,11 +205,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean req(TakeCourseInput parameter) {
+    public ServiceResult req(TakeCourseInput parameter) {
+
+        ServiceResult serviceResult = new ServiceResult();
 
         Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
         if (optionalCourse.isEmpty()) {
-            return false;
+            serviceResult.setResult(false);
+            serviceResult.setMessage("강좌 정보가 존재하지 않습니다.");
+
+            return serviceResult;
         }
 
         // DB서 가져온 엔티티
@@ -224,7 +230,10 @@ public class CourseServiceImpl implements CourseService {
 
         // 이미 해당 강좌가 존재
         if(count > 0){
-            return false;
+            serviceResult.setResult(false);
+            serviceResult.setMessage("이미 해당 강좌에 대해 신청 정보가 존재합니다.");
+
+            return serviceResult;
         }
 
 
@@ -237,6 +246,10 @@ public class CourseServiceImpl implements CourseService {
                           .build();
 
         takeCourseRepository.save(takeCourse);
-        return true;
+
+        serviceResult.setResult(true);
+        serviceResult.setMessage("");
+
+        return serviceResult;
     }
 }

@@ -3,6 +3,7 @@ package com.example.zerobaseproject03.course.service;
 import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
+import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.course.model.TakeCourseInput;
 
 import java.util.List;
@@ -35,6 +36,6 @@ public interface CourseService {
 
 
     // 수강신청을 위한 메소드
-    boolean req(TakeCourseInput parameter);
+    ServiceResult req(TakeCourseInput parameter);
 
 }

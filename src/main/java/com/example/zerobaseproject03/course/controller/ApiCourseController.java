@@ -1,6 +1,7 @@
 package com.example.zerobaseproject03.course.controller;
 
 import com.example.zerobaseproject03.admin.service.CategoryService;
+import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.course.model.TakeCourseInput;
 import com.example.zerobaseproject03.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,10 @@ public class ApiCourseController extends BaseController {
                                 Principal principal) {
 
         parameter.setUserId(principal.getName());
-        boolean result = courseService.req(parameter);
+        ServiceResult serviceResult = courseService.req(parameter);
 
-        if(!result){
-            return ResponseEntity.badRequest().body("수강신청에 실패하였습니다.");
+        if(!serviceResult.isResult()){
+            return ResponseEntity.ok().body(serviceResult.getMessage());
         }
 
         return ResponseEntity.ok().body(parameter);
