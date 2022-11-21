@@ -24,9 +24,9 @@ public class CourseController extends BaseController {
     private final CourseService courseService; // 강좌 서비스
     private final CategoryService categoryService; // 카테고리 서비스
 
-    // 프론트 페이지에서 회원 강좌 목록 가져오는 메소드
 
 
+    // 프론트 페이지에서 회원 강좌 목록 가져오는 컨트롤러
     @GetMapping("/course")
     public String course(Model model, CourseParam parameter) {
 
@@ -50,5 +50,22 @@ public class CourseController extends BaseController {
         model.addAttribute("courseTotalCount", courseTotalCount);
 
         return "course/index";
+    }
+
+
+
+    // {id} => id는 동적인 값
+    // 즉 해당 컨트롤러는 강좌 정보 페이지에서 뜨는 강좌를 클릭시
+    // 해당 강좌 정보를 보여준다.
+
+    // front 뷰 구현 => 컨트롤러 구현(구현시 초기에 처리후 보낼 뷰를 테스트) 및 로직 구현 => 뷰 구현
+    @GetMapping("/course/{id}")
+    public String courseDetail(Model model,
+                               CourseParam parameter) {
+
+        CourseDto detail = courseService.frontDetail(parameter.getId());
+        model.addAttribute("detail",detail);
+
+        return "course/detail";
     }
 }

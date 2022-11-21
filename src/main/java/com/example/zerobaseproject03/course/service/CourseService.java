@@ -3,6 +3,7 @@ package com.example.zerobaseproject03.course.service;
 import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
+import com.example.zerobaseproject03.course.model.TakeCourseInput;
 
 import java.util.List;
 
@@ -28,5 +29,12 @@ public interface CourseService {
 
     // 회원의 강좌 리스트를 반환하는 메소드(일반 회원용)
     List<CourseDto> frontList(CourseParam parameter);
+
+    // 강좌 목록(프론트)에서 해당 강좌 상세 페이지를 처리하는 메소드
+    CourseDto frontDetail(long id);
+
+
+    // 수강신청을 위한 메소드
+    boolean req(TakeCourseInput parameter);
 
 }

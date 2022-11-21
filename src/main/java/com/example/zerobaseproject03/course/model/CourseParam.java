@@ -15,6 +15,6 @@ import lombok.Setter;
 // 입력시 사용되는 커맨드 클래스(dao)
 public class CourseParam extends CommonParam {
 
-
+    long id;
     long categoryId;
 }

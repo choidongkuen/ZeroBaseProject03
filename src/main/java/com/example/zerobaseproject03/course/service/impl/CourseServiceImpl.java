@@ -2,10 +2,14 @@ package com.example.zerobaseproject03.course.service.impl;
 
 import com.example.zerobaseproject03.course.dto.CourseDto;
 import com.example.zerobaseproject03.course.entity.Course;
+import com.example.zerobaseproject03.course.entity.TakeCourse;
+import com.example.zerobaseproject03.course.entity.TakeCourseCode;
 import com.example.zerobaseproject03.course.mapper.CourseMapper;
 import com.example.zerobaseproject03.course.model.CourseInput;
 import com.example.zerobaseproject03.course.model.CourseParam;
+import com.example.zerobaseproject03.course.model.TakeCourseInput;
 import com.example.zerobaseproject03.course.repository.CourseRepository;
+import com.example.zerobaseproject03.course.repository.TakeCourseRepository;
 import com.example.zerobaseproject03.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +29,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TakeCourseRepository takeCourseRepository;
 
     // 저장된 강좌 리스트 리턴하는 메소드
     @Override
@@ -166,7 +172,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CourseDto> frontList(CourseParam parameter) {
 
-        if(parameter.getCategoryId() < 1) {
+        if (parameter.getCategoryId() < 1) {
             List<Course> courseList = courseRepository.findAll();
             return CourseDto.of(courseList);
         }
@@ -176,11 +182,61 @@ public class CourseServiceImpl implements CourseService {
         Optional<List<Course>> optionalCourseList =
                 courseRepository.findByCategoryId(categoryId);
 
-        if(optionalCourseList.isEmpty()){
+        if (optionalCourseList.isEmpty()) {
             return null;
         }
 
         return CourseDto.of(optionalCourseList.get());
 
+    }
+
+
+    // id를 통해 강좌 목록애서 해당 강좌에 상세 정보 처리하는 메소드
+    @Override
+    public CourseDto frontDetail(long id) {
+
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+
+        if (optionalCourse.isEmpty()) {
+            return null;
+        }
+        return CourseDto.of(optionalCourse.get());
+    }
+
+    @Override
+    public boolean req(TakeCourseInput parameter) {
+
+        Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
+        if (optionalCourse.isEmpty()) {
+            return false;
+        }
+
+        // DB서 가져온 엔티티
+        // 가져온 데이터의 가공이 필요
+        Course course = optionalCourse.get();
+
+        // 이미 해당 강좌 신청 정보가 있는지 확인
+        String[] statusList = {TakeCourse.STATUS_REQ, TakeCourse.STATUS_COMPLETE};
+
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId()
+                ,parameter.getUserId()
+                ,Arrays.asList(statusList));
+
+        // 이미 해당 강좌가 존재
+        if(count > 0){
+            return false;
+        }
+
+
+        TakeCourse takeCourse = TakeCourse.builder()
+                          .courseId(course.getId())
+                          .userId(parameter.getUserId())
+                          .payPrice(course.getSalePrice())
+                          .regDt(LocalDateTime.now())
+                          .status(TakeCourseCode.STATUS_REQ)
+                          .build();
+
+        takeCourseRepository.save(takeCourse);
+        return true;
     }
 }
