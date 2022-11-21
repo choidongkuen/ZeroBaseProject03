@@ -4,6 +4,7 @@ import com.example.zerobaseproject03.admin.dto.MemberDto;
 import com.example.zerobaseproject03.admin.mapper.MemberMapper;
 import com.example.zerobaseproject03.admin.model.MemberParam;
 import com.example.zerobaseproject03.components.MailComponents;
+import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.member.entity.Member;
 import com.example.zerobaseproject03.member.exception.MemberNotEmailAuthException;
 import com.example.zerobaseproject03.member.exception.MemberStopUserException;
@@ -307,7 +308,7 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    // 회원의 요청으로 비밀번호를 수정하는 메소드
+    // 회원의 요청으로 비밀번호를 수정하는 메소드(관리자 페이지)
     @Override
     public boolean updatePassword(String userId, String password) {
 
@@ -326,5 +327,36 @@ public class MemberServiceImpl implements MemberService {
 
         return true;
 
+    }
+
+    // 회원의 비밀번호를 수정하는 메소드(회원 정보 페이지)
+    @Override
+    public ServiceResult updateMemberPassword(MemberInput parameter) {
+
+        String userId = parameter.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+
+        // 해당 회원 정보 존재 x
+        if(optionalMember.isEmpty()){
+            return new ServiceResult(false,"회원 정보가 존재하지 않습니다.");
+        }
+
+        Member member = optionalMember.get();
+
+        // 전달된 비밀번호가 일치 x
+        if(!BCrypt.checkpw(parameter.getPassword(), member.getPassword())){
+
+            return new ServiceResult(false, "비밀번호가 잁치하지 않습니다.");
+        }
+
+
+        String encPassword = BCrypt.hashpw(parameter.getNewPassword(),
+                BCrypt.gensalt());
+
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
     }
 }

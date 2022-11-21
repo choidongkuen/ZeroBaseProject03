@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+
+            $('#updateForm').on('submit', function() {
+
+                if (!confirm('회원 정보를 수정하시겠습니까? ')) {
+                    return false;
+                }
+
+            });
+
+        });
+    </script>
+
+</head>
+<body>
+
+<h1>회원 정보 페이지</h1>
+<!--<div th:replace="/fragments/layout.html :: fragment-body-menu"></div>-->
+
+<div>
+    <hr/>
+    <a href="/member/info">회원 정보 수정</a>
+    |
+    <a href="/member/password">비밀번호 변경</a>
+    |
+    <a href="/member/takecourse">내 수강 목록</a>
+    <hr/>
+</div>
+
+
+<div class="list">
+
+    <table>
+        <thead>
+        <tr>
+            <th> NO </th>
+            <th>
+                등록일
+            </th>
+            <th>
+                강좌명
+            </th>
+            <th>
+                상태
+            </th>
+            <th>
+                비고
+            </th>
+        </tr>
+        </thead>
+        <tbody id="dataLIst">
+        <tr th:each="x, i: ${list}">
+            <td th:text="${i.index + 1}">1</td>
+            <td>
+                <p th:text="${x.regDtText}">2021.01.01</p>
+            </td>
+            <td>
+                <p th:text="${x.subject}">강좌명 </p>
+            </td>
+
+            <td>
+                <p th:if="${x.status eq 'REQ'}">수강신청</p>
+                <p th:if="${x.status eq 'COMPLETE'}">결재완료</p>
+                <p th:if="${x.status eq 'CANCEL'}">수강취소</p>
+            </td>
+            <td>
+                <div class="row-buttons" th:if="${x.status eq 'REQ'}">
+                    <button type="button" th:value="${x.id}">수강취소 처리</button>
+                </div>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</body>
+</html>

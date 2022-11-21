@@ -1,9 +1,13 @@
 package com.example.zerobaseproject03.member.controller;
 
+import com.example.zerobaseproject03.admin.dto.MemberDto;
+import com.example.zerobaseproject03.course.model.ServiceResult;
+import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import com.example.zerobaseproject03.member.service.MemberService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 
 // Member Controller
@@ -20,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 // 즉, 회원 정보에 관련된 서버로 들어오는 모든 처리에 대한 방향을 서버 앞단에서 제시
 // 컨트롤러를 구현한다는 것은 request의 처리를 담당하는 메소드를 구현하는 것이다.
 // 컨트롤러 :: 요청 처리 -> 뷰역할에서 필요한 데이터 모델객체에 담기 -> 뷰 이름 리턴
+
 @Slf4j
 @Controller
 @Setter
@@ -71,12 +77,61 @@ public class MemberController {
 
     }
 
-    // 사용자 정보 보여주기 요청을 처리하는 컨트롤러 실행
-
+    // 사용자 정보 보여주기 요청을 처리하는 컨트롤러
     @GetMapping("/info")
-    public String memberInfo() {
+    public String memberInfo(Model model, Principal principal) {
+
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        model.addAttribute("detail", detail);
 
         return "member/info";
+    }
+    ///////////////////////
+    // 사용자 비밀번호 정보 컨트롤러
+    @GetMapping("/password")
+    public String memberPassword(Model model, Principal principal) {
+
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        model.addAttribute("detail", detail);
+
+        return "member/password";
+    }
+
+    // 사용자 비밀번호 정보 컨트롤러
+    @PostMapping("/password")
+    public String memberPasswordSubmit(Model model,
+                                       Principal principal,
+                                       MemberInput parameter) {
+
+        String userId = principal.getName();
+        parameter.setUserId(userId);
+
+        ServiceResult serviceResult =
+                memberService.updateMemberPassword(parameter);
+
+        if(!serviceResult.isResult()){
+            model.addAttribute("message", serviceResult.getMessage());
+            return "common/error";
+        }
+
+        return "redirect:/member/info";
+    }
+
+    /////////////////////////
+    // 사용자 수강 목록 정보 컨트롤러
+    @GetMapping("/takecourse")
+    public String memberTakecourse(Model model, Principal principal) {
+
+        String userId = principal.getName();
+        MemberDto detail = memberService.detail(userId);
+
+        model.addAttribute("detail", detail);
+
+        return "member/takecourse";
     }
 
 

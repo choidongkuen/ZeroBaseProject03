@@ -2,6 +2,7 @@ package com.example.zerobaseproject03.member.service;
 
 import com.example.zerobaseproject03.admin.dto.MemberDto;
 import com.example.zerobaseproject03.admin.model.MemberParam;
+import com.example.zerobaseproject03.course.model.ServiceResult;
 import com.example.zerobaseproject03.member.model.MemberInput;
 import com.example.zerobaseproject03.member.model.ResetPasswordInput;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,5 +39,8 @@ public interface MemberService extends UserDetailsService {
     // 회원 비밀번호 초기화 하는 메소드
     boolean updatePassword(String userId, String password);
 
+
+    // 회원 비밀번호 초기화 하는 메소드( 회원 정보 페이지 )
+    ServiceResult updateMemberPassword(MemberInput parameter);
 
 }
