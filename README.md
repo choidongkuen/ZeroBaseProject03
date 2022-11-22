@@ -1,7 +1,8 @@
 # ZeroBaseProject03[ Spring framework를 통해 전반적인 웹페이직 기능 구현해보기 ]
 ## Spring 프레임워크를 이용한 웹페이지 구현 프로젝트 ☃︎
 
-### Spring boot를 이용한 웹페이지 구현해보기
+## 프로젝트 수행 목적
+ Spring boot를 이용한 웹페이지 구현해보기
 
 
 ## 프로젝트 기간
