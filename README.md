@@ -13,15 +13,22 @@
 - Java
 - Html,CSS,JS
 
-## 사용된 Tools(Technique)
+## 사용된 Tools(Technique & 개발 환경(시스템)
 
 - Spring Boot
+- Spring Security
 - Jquery
 - Maven
 - MyBatis(DB)
 - JPA(DB)
 - Daum API
 - 네이버 스마트 에디터
+- Lmbok 등 다양한 라이브러리 
+- Maria DBMS
+- Apache Tomcat
+
+
+
 
 
 
